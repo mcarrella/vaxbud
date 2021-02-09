@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "914492512780",
+    "project_id": "hublite-e3e03",
+    "storage_bucket": "hublite-e3e03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914492512780:android:2a69e402d9a0a9b2baac29",
+        "android_client_info": {
+          "package_name": "com.waggle.hublite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "914492512780-3v2hu1u5vpb146sks2if3upeel6h3qt1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsAKW2Aq_FOsfszE0rUKqzm8fGyah4leY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "914492512780-3v2hu1u5vpb146sks2if3upeel6h3qt1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

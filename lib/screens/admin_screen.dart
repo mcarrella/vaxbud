@@ -27,7 +27,18 @@ class _AdminScreenState extends State<AdminScreen> {
 																				.collection("appointments");
 															builder: (context, AsyncSnapshot snapshot) {
 																				
-																					ListView.builder(...);
+																					{
+																									if (snapshot.hasData) {
+																												return ListView.builder(
+																															list: snapshot.data.documents,
+																															builder: (context, index) {
+																																return Text("result here");
+																																		
+																																	});
+																															} else if (snapshot.hasError) {
+																																return Text(snapshot.error.toString());
+																																} return Center(child: CircularProgressIndicator());
+																															}
 																					
 																					}),
 																					

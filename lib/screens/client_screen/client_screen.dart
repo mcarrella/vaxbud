@@ -1,11 +1,12 @@
 import 'package:fltuter/material.dart';
 
+import 'package:rxdart/rxdart.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaxbud/services/storage/shared_prefs.dart';
 
 import 'package:vaxbub/widgets/client_screen/appointments_widget.dart';
-import './sites_explorer.dart';
+;
 
 class ClientScreen extends StatefulWidget {
 	@override
@@ -15,8 +16,14 @@ class ClientScreen extends StatefulWidget {
 
 class ClientScreenState extends State<ClientScreen> {
 
-	int selectedIndex = 0;
+	bool apptsViewMode = true;
 
+	BehaviorSubject<double> radius = BehaviorSubject.seeded(100.0);
+	
+	radiusChangedCallback(double value) {
+				radius.add(value);
+		}
+	
 	
 
 	@override
@@ -24,39 +31,41 @@ class ClientScreenState extends State<ClientScreen> {
 		return 
 						Scaffold(
 									
-									body: StreamBuilder(
-															stream: Firestore.instance.collection("sites"),
-															builder: (context, AsyncSnapshot snapshot) {
+									body: (apptsModeView==true) ? AppointmentsWidget("none") :
+												Stack(
+														children: <Widget>[
+																				SearchInputPanel(radius: radius,
+																								onRadiusChanged: radiusChangedCallback),
 																
-																			switch(selectedIndex) {
-																						case 0:
-																									return AppointmentsWidget("none");
-																									break;
-																						case 1:
-																									return SitesExplorer(sitesList: snapshot.data.documents);
-																									break;
-																						default:
-																									return CircularProgressIndicator();
-																									break;
-																									
-																							}
-																			}),
-																									
-																											
-									botttomNaivgationBar: BottomNavigationBar(
-																		currentIndex: selectedIndex,
-																		onTap: (int index) => setState(() => selectedIndex = index),
-																		items: [
-																							BottomNavigationBarItem(
-																														icon: Icon(Icons.list),
-																														title: Text("appointments"),
+																				StreamBuilder(
+																								stream: Firestore.instance.collection("geoPosts"),
+																								builder: (context, AsyncSnapshot snapshot) {
+																									if (snapshot.hasData) {
+																												return ListView.builder(
+																															list: snapshot.data.documents,
+																															builder: (context, index) {
+																																return Text("result here");
+																																		
+																																	});
+																															} else if (snapshot.hasError) {
+																																return Text(snapshot.error.toString());
+																																} return Center(child: CircularProgressIndicator());
+																															}
+																															
 																												),
-																							BottomNavigationBarItem(
-																														icon: Icon(Icons.search),
-																														title: Text("search"),
-																													),
-																				],
-																		),
-																		
+																										],
+																								),
+																
+																			
+									floatingActionButton: FloatingActionButton.extended(
+																		onPressed: () {
+																														apptsViewMode = !apptsViewMode;
+																														setState(() {});
+																									},
+																								label: Text('My Appointments'),
+																								icon: Icon(Icons.thumb_up),
+																								backgroundColor: Colors.pink,
+															),
+													);
 																}
 											}
