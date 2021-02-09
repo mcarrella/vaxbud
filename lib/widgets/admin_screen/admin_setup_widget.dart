@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vaxbud/services/storage/shared_prefs.dart';
 import 'package:latlong/latlong.dart';
-import 'package:hublite/widgets/common/search_place_widget.dart';
-
+import 'package:vaxbud/widgets/common/search_place_widget.dart';
+import './site_info_widget.dart';
 
 class RegisterSiteWidget extends StatefulWidget {
+	
 	@override
 	_RegisterSiteWidgetState createState() => _RegisterSiteWidgetState();
 }
@@ -14,14 +16,12 @@ class _RegisterSiteWidgetState extends State<RegisterSiteWidget {
 	LatLng siteCoords;
 	
 	
-	var mapData = HashMap<String, String>();
+	var mapData = HashMap<String, dynamic>();
 	mapData["site_name"] = SiteInfoState.controllerSiteName.text;
 	mapData["site_phone"] = SiteInfoState.controllerSitePhone.text;
+	mapData["site_location"] = SiteLocationState.point;
 
-	onSelectedCalllback(LatLng pos) {
-		setState(() {
-							siteCoords = pos;
-					}
+	
 	
 	List<Step> steps = [
 							Step(
@@ -32,13 +32,13 @@ class _RegisterSiteWidgetState extends State<RegisterSiteWidget {
 										),
 							Step(
 										title: Text("Site location"),
-										content: SearchPlaceWidget(onSelected: onSelectedCallback),
+										content: SiteLocation() 
 										state: currentStep == 1 ? StepState.editing : StepState.indexed,
 										isActive: true,
 										),
 							Step(
 										title: Text("Register"),
-										content: Upload(mapData, siteCoords),
+										content: Upload(mapData),
 										state: StepState.complete,
 										isActive: true,
 										),

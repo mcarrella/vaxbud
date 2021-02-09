@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:vaxbub/services/storage/shared_prefs.dart';
+import 'package:vaxbud/services/storage/shared_prefs.dart';
+
+import './landing.dart';
 
 Future<void> main() async {
 				WidgetsFlutterBinding.ensureInitialized();

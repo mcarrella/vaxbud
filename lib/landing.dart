@@ -7,6 +7,7 @@ import 'package:vaxbud/screens/admin_screen/admin_screen.dart';
 import 'package:vaxbud/widgets/admin_screen/admin_setup_widget.dart';
 
 import 'package:vaxbud/screens/client_screen/client_screen.dart';
+import 'package:vaxbud/widgets/common/new_user_widget.dart';
 
 
 class Landing extends StatefulWidget {
@@ -23,6 +24,7 @@ class _LandingState extends State<Landing> {
 		return await _auth.signInAnonymously();
 	}
 	
+	
 	createClientDoc(String uid) {
 		clientsRef.document(uid).setData({});
 	}
@@ -34,6 +36,9 @@ class _LandingState extends State<Landing> {
 							});
 		sharedPrefs.role = "client";
 	}
+	
+	
+															
 	
 	
 	
