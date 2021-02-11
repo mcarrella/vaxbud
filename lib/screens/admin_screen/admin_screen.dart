@@ -12,7 +12,7 @@ class AdminScreen extends StatefulWidget {
 class _AdminScreenState extends State<AdminScreen> {
 
 	int selectedIndex = 0;
-
+	
 	
 
 	@override
@@ -25,7 +25,7 @@ class _AdminScreenState extends State<AdminScreen> {
 															stream: Firestore.collection("sites")
 																				.document(sharedPrefs.uid)
 																				.collection("appointments");
-															builder: (context, AsyncSnapshot snapshot) {
+															builder: (context, snapshot) {
 																				
 																					{
 																									if (snapshot.hasData) {

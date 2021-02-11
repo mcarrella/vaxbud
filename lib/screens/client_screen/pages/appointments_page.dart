@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-class AppointmentsWidget extends StatelessWidget {
+class AppointmentsPage extends StatelessWidget {
 	String userAppointments;
 	AppointmentsWidget(this.userAppointments);
 	

@@ -18,54 +18,35 @@ class ClientScreenState extends State<ClientScreen> {
 
 	bool apptsViewMode = true;
 
-	BehaviorSubject<double> radius = BehaviorSubject.seeded(100.0);
-	
-	radiusChangedCallback(double value) {
-				radius.add(value);
-		}
-	
-	
-
 	@override
 	Widget build(BuildContext context) {
 		return 
 						Scaffold(
-									
+									appBar: AppBar(title: 'CLIENT SCREEN'),
+									floatingActionButton: FloatingActionButton.extended(
+																		onPressed: () {
+																						apptsViewMode = !apptsViewMode;
+																						setState(() {});
+																									},
+																		label: Text('My Appointments'),
+																		icon: Icon(Icons.thumb_up),
+																		backgroundColor: Colors.pink,
+															),
 									body: (apptsModeView==true) ? AppointmentsWidget("none") :
 												Stack(
 														children: <Widget>[
-																				SearchInputPanel(radius: radius,
-																								onRadiusChanged: radiusChangedCallback),
+																				(apptsModeView==true) ? Center(child: Text("USER APPOINTMENTS")
+																										: ResultsPage(),
 																
-																				StreamBuilder(
-																								stream: Firestore.instance.collection("geoPosts"),
-																								builder: (context, AsyncSnapshot snapshot) {
-																									if (snapshot.hasData) {
-																												return ListView.builder(
-																															list: snapshot.data.documents,
-																															builder: (context, index) {
-																																return Text("result here");
-																																		
-																																	});
-																															} else if (snapshot.hasError) {
-																																return Text(snapshot.error.toString());
-																																} return Center(child: CircularProgressIndicator());
-																															}
+																				(apptsModeView==true) ? AppointmentsWidget("none") 
+																									: ResultsPage(),
 																															
-																												),
+																				
 																										],
 																								),
 																
 																			
-									floatingActionButton: FloatingActionButton.extended(
-																		onPressed: () {
-																														apptsViewMode = !apptsViewMode;
-																														setState(() {});
-																									},
-																								label: Text('My Appointments'),
-																								icon: Icon(Icons.thumb_up),
-																								backgroundColor: Colors.pink,
-															),
+									
 													);
 																}
 											}

@@ -8,27 +8,27 @@ import './radius_slider.dart';
 class SearchInputPanel extends StatelessWidget {
 	
 	double radius;
+	LatLng location;
+	DateTime date;
 	final void Function(double value) onRadiusChanged;
+	final void Function(LatLng coords) onLocationChanged;
+	final void Function(DateTime date) onDateChanged;
 	
-	onSelectPlace(LatLng coords) {
-				print('GOT COORDS');
-		}
+
+	
+	
+	_selectDate(BuildContext context) async {
+		final DateTime picked = await showDatePicker(
+												context: context,
+												initialDate: date,
+												firstDate: DateTime(2000),
+												lastDate: DateTime(2025),
+												);
+		onDateChanged(picked);
+	}
+										
 		
-	dateTimeRangePicker() async {
-		DateTimeRange picked = await showDateRangePicker(
-													context,,
-													firstDate: DateTime(DateTime.now().year - 5),
-													lastDate: DateTime(DateTime.now().year + 5),
-													initialDateRange: DateTimeRange(
-																				end: DateTime(
-																								DateTime.now().year,
-																								DateTime.now().month,
-																								DateTime.now().day + 13),
-																				start: DateTime.now(),
-																			),
-																	);
-														print(picked);
-											}
+	
 	
 	@override
 	Widget build(BuildContext context) {
@@ -39,14 +39,18 @@ class SearchInputPanel extends StatelessWidget {
 													
 													RadiusSlider(radius: radius,
 																	onChangedCallback: onRadiusChanged),
-													Text("from location"),
-													SearchPlaceWidget(onSelect: onSelectPlace),
+													
+													SearchPlaceWidget(onSelect: onLocationChanged),
 													RaisedButton(
-																	child: Text("Date Range"),
-																	onPressed: () {
-																					dateTimeRangePicker();
-																					},
-																		),
+																	onPressed: () => _selectDate(context),
+																	child: 'select date',
+																	style: TextStyle(
+																						color: Colors.black,
+																						fontWeight: FontWeight.bold,
+																						),
+																	color: Colors.greenAccent,
+																	),
+												
 													],
 										),
 									);
