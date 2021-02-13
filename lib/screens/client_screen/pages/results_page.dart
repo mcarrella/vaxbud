@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:vaxbub/services/storage/shared_prefs.dart';
+import 'package:vaxbub/services/storage/shared_prefs.dart';
+
 
 class ResultsPage extends StatefulWidget {
 	@override
@@ -10,10 +13,20 @@ class ResultsPage extends StatefulWidget {
 
 class _ResultsPageState extends State<ResultsPage> {
 	
+	CollectionReference requestRef = Firestore.instance.collection("appointmentRequests");
 
 	BehaviorSubject<double> radius = BehaviorSubject.seeded(100.0);
 	BehaviorSubject<LatLng> locationQuery = BehaviorSubject.seeded(LatLng(0.0, 0.0));
 	BehaviorSubject<DateTime> dateQuery = BehaviorSubject.seeded(DateTime.now());
+	
+	
+	requestAppointmentCallback(String siteId) {
+		requestsRef.document(siteId)
+					.collection("requests")
+					.document(sharedPrefs.uid)
+					.setData({});
+				}
+			
 	
 	
 	

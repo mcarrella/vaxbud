@@ -34,6 +34,9 @@ dependencies:
   cloud_firestore:
   rxdart:
   latlong:
+  location:
+  geoflutterfire:
+  mapbox_search_flutter:
 
 dev_dependencies:
   flutter_test:

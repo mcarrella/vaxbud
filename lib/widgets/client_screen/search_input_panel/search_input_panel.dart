@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
-import 'package:vaxbub/widgets/common/search_place_widget.dart';
+import 'package:vaxbud/widgets/common/search_place_widget.dart';
 
 import './radius_slider.dart';
 
