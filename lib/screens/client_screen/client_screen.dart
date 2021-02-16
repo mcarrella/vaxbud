@@ -1,12 +1,13 @@
-import 'package:fltuter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:rxdart/rxdart.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaxbud/services/storage/shared_prefs.dart';
 
-import 'package:vaxbub/widgets/client_screen/appointments_widget.dart';
-;
+import 'package:vaxbud/screens/client_screen/pages/appointments_page.dart';
+import 'package:vaxbud/screens/client_screen/pages/results_page.dart';
+
 
 class ClientScreen extends StatefulWidget {
 	@override
@@ -14,7 +15,7 @@ class ClientScreen extends StatefulWidget {
 }
 
 
-class ClientScreenState extends State<ClientScreen> {
+class _ClientScreenState extends State<ClientScreen> {
 
 	bool apptsViewMode = true;
 
@@ -22,31 +23,25 @@ class ClientScreenState extends State<ClientScreen> {
 	Widget build(BuildContext context) {
 		return 
 						Scaffold(
-									appBar: AppBar(title: 'CLIENT SCREEN'),
-									floatingActionButton: FloatingActionButton.extended(
+									appBar: AppBar(title: (apptsViewMode==true) ? Text("MY APPOINTMENTS") : Text('SEARCH VAX SITES')),
+									floatingActionButton: FloatingActionButton(
 																		onPressed: () {
 																						apptsViewMode = !apptsViewMode;
 																						setState(() {});
 																									},
-																		label: Text('My Appointments'),
-																		icon: Icon(Icons.thumb_up),
+																		child: (apptsViewMode==true) ? Icon(Icons.search) : Icon(Icons.close),
+															
+																		
 																		backgroundColor: Colors.pink,
 															),
-									body: (apptsModeView==true) ? AppointmentsWidget("none") :
-												Stack(
-														children: <Widget>[
-																				(apptsModeView==true) ? Center(child: Text("USER APPOINTMENTS")
-																										: ResultsPage(),
-																
-																				(apptsModeView==true) ? AppointmentsWidget("none") 
-																									: ResultsPage(),
+									body: (apptsViewMode==true) ? AppointmentsPage("none") : ResultsPage(),
 																															
 																				
-																										],
-																								),
+							
 																
 																			
 									
-													);
+																			
+																		);
 																}
 											}

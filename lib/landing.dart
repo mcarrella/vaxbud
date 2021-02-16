@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:vaxbud/services/storage/shared_prefs.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 import 'package:vaxbud/screens/admin_screen/admin_screen.dart';
-import 'package:vaxbud/screens/admin_screen/admin_setup_page.dart';
-
 import 'package:vaxbud/screens/client_screen/client_screen.dart';
-import 'package:vaxbud/widgets/common/new_user_widget.dart';
+
 
 
 class Landing extends StatefulWidget {
@@ -20,9 +20,6 @@ class _LandingState extends State<Landing> {
 	FirebaseAuth _auth = FirebaseAuth.instance;
 	CollectionReference clientsRef = Firestore.instance.collection("clients");
 	
-	Future<String> createUserId() {
-		return await _auth.signInAnonymously();
-	}
 	
 	
 	createClientDoc(String uid) {
@@ -30,17 +27,47 @@ class _LandingState extends State<Landing> {
 	}
 	
 	createClient() {
-		createUserId().then((result) {
-							createClientDoc(result.user.uid);
-							sharedPrefs.uid = result.user.uid;
-							});
+		_auth.signInAnonymously().then((result) {
+						createClientDoc(result.user.uid);
+						sharedPrefs.uid = result.user.uid;
+						});
 		sharedPrefs.role = "client";
 	}
 	
 	
 															
 	
-	
+	Widget _buildNewUser() => Scaffold(
+							appBar: AppBar(title: Text("NEW USER")),
+							body: Column(
+											children: <Widget>[
+																Text("Vax Buddy"),
+																Text("Welcome new user"),
+																Text("Please make a selection: "),
+																Row(
+																		children: <Widget>[
+																								RaisedButton(
+																										child: Text("patient"),
+																										onPressed: () {
+																													registerClient();
+																							
+																													
+																													},
+																										),
+																								SizedBox(width: 15),
+																								RaisedButton(
+																										child: Text("administrator"),
+																										onPressed: () {
+																													
+																													registerAdmin();
+																												
+																													},
+																											),
+																							],
+																),
+																],
+													),
+											);
 	
 
 	
@@ -54,22 +81,8 @@ class _LandingState extends State<Landing> {
 						setState(() {});
 				}
 	
-	_buildClient() {
-					return ClientScreen();
-				}}
-	
-	_buildAdmin() {
-						if (sharedPrefs.uid) {
-													return AdminScreen(adminId: sharedPrefs.uid);
-													} else { 
-																return AdminSetupWidget();
-																}
-													}
-	_buildNewUser() {
-				return NewUserWidget(onRegisterUser: registerUser,
-										onRegisterAdmin: registerAdmin);
-					}
-	
+								
+
 	
 	@override
 	Widget build(BuildContext context) {
@@ -78,17 +91,24 @@ class _LandingState extends State<Landing> {
 																			
 																			
 																			case "client":
-																								_buildClient();
+																								print('CLIENT');
+																								return ClientScreen();
 																								break;
 																			case "admin":
-																								_buildAdmin();
+																								print('ADMIN');
+																								return AdminScreen();
 																								break;
 																			case "":
-																								_buildNewUser();
+																								print('NEW USER');
+																								return _buildNewUser();
 																								break;
 																			default: 
+																								print('DEFAULT');
 																								return Center(child: Text("SPLASH"));
 																								break;
 																					}
 																}
+												
+																
+										
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:latlong/latlong.dart';
+import 'package:vaxbud/services/storage/shared_prefs.dart';
 
-import 'package:vaxbub/services/storage/shared_prefs.dart';
-import 'package:vaxbub/services/storage/shared_prefs.dart';
+import 'package:vaxbud/widgets/common/search_place_widget.dart';
 
 
 class ResultsPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class ResultsPage extends StatefulWidget {
 
 class _ResultsPageState extends State<ResultsPage> {
 	
-	CollectionReference requestRef = Firestore.instance.collection("appointmentRequests");
+	CollectionReference requestsRef = Firestore.instance.collection("appointmentRequests");
 
 	BehaviorSubject<double> radius = BehaviorSubject.seeded(100.0);
 	BehaviorSubject<LatLng> locationQuery = BehaviorSubject.seeded(LatLng(0.0, 0.0));
@@ -28,61 +29,83 @@ class _ResultsPageState extends State<ResultsPage> {
 				}
 			
 	
-	
-	
-	radiusChangedCallback(double value) {
-				radius.add(value);
-		}
-		
+
 	queryChangedCallback(LatLng coords) {
-			query.add(coords);
+		locationQuery.add(coords);
 	}
 	
-	dateChangedCallback(DateTime date) {
-			dateQuery.add(date);
-			}
 	
-	dateR
+			
+	_selectDate(BuildContext context) async {
+		final DateTime picked = await showDatePicker(
+												context: context,
+												initialDate: dateQuery.value,
+												firstDate: DateTime(2000),
+												lastDate: DateTime(2025),
+												);
+		dateQuery.add(picked);
+	}
 	
+
 	@override
 	Widget build(BuildContext context) {
-		return Column(
-						children: <Widget>[
-							SearchInputPanel(
-										radiusChanged: radiusChangedCallback,
-										queryChanged: queryChangedCallback,
-										dateChanged: dateChangedCallback,
+		return Scaffold(
+					body: CustomScrollView(
+										slivers: <Widget>[
+										SliverList(
+														delegate: SliverChildListDelegate([
+												SearchPlaceWidget(onSelect: queryChangedCallback),
+									Slider(
+																min: 100.0,
+																max: 500.0,
+																divisions: 4,
+																value: radius.value,
+																label: 'Radius ${radius.value}km',
+																activeColor: Colors.green,
+																inactiveColor: Colors.green.withOpacity(0.2),
+																onChanged: (value) {
+													
+																				print('NEEW VAL');
+																				setState(() {
+																				radius.add(value);
+																				});
+																		
+																		},
+															),
+									RaisedButton(
+																	onPressed: () => _selectDate(context),
+																	child: Text('select date',
+																					style: TextStyle(
+																						color: Colors.black,
+																						fontWeight: FontWeight.bold,
+																						),
+																					),
+																	color: Colors.greenAccent,
+																
+																	),
+											]),
+											
+											
 										),
-							StreamBuilder(
-									stream: Firestore.instance.collection("geoPosts"),
-									builder: (context, snapshot) {
-													if (snapshot.hasData) {
-																return ListView.builder(
-																		itemCount: snapshot.data.documents.length,
-																		itemBuilder: (BuildContext context, int index) {
-																						return Card(
-																									child: ListTile(
-																										leading: Icon(Icons.list),
-																										trailing: Tex("GFG",
-																															style: TextStyle(
-																																		color: Colors.green,
-																																		fontSize: 15),
-																															),
-																										title: Text("List item $index"),
-																										trailing: Icon(Icons.list),
-																											),
-																										);
-																											
-																								});
-																				}
-																										
-													else if (snapshot.hasError) {
-																return Text(snapshot.error.toString());
-															}
-													return Center(child: CircularProgressIndicator());
-											},
-									),
-								],
-							);
+										StreamBuilder(
+													stream: Firestore.instance.collection("geoPosts").snapshots(),
+													builder: (context, snapshot) => SliverList(
+																	delegate: (snapshot.hasData && snapshot.data.documents.length > 0) ? SliverChildBuilderDelegate(
+																									(context, index) => ListTile(title: Text("result")),
+																									childCount: snapshot.data.documents.length,
+																									) : SliverChildBuilderDelegate(
+																									(context, index) => ListTile(title: Text("No Results")),
+																									childCount: 1,
+																									)
+																																	
+																								)
+																							),
+										
+												
+									])
+										
+										
+					
+						);
 				}
 	}	

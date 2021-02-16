@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 
 class AppointmentsPage extends StatelessWidget {
-	String userAppointments;
-	AppointmentsWidget(this.userAppointments);
+	final String userAppointments;
+	const AppointmentsPage(this.userAppointments);
+
 	
 	@override
 	Widget build(BuildContext context) {

@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "914492512780",
-    "project_id": "hublite-e3e03",
-    "storage_bucket": "hublite-e3e03.appspot.com"
+    "project_number": "972139813772",
+    "project_id": "vaxbud-6f5b2",
+    "storage_bucket": "vaxbud-6f5b2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:914492512780:android:2a69e402d9a0a9b2baac29",
+        "mobilesdk_app_id": "1:972139813772:android:92189294feba1b04f954a9",
         "android_client_info": {
-          "package_name": "com.waggle.hublite"
+          "package_name": "com.example.vaxbud"
         }
       },
       "oauth_client": [
         {
-          "client_id": "914492512780-3v2hu1u5vpb146sks2if3upeel6h3qt1.apps.googleusercontent.com",
+          "client_id": "972139813772-h60o3s3dfjlrp2tdhl0i7718h7p3a08u.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAsAKW2Aq_FOsfszE0rUKqzm8fGyah4leY"
+          "current_key": "AIzaSyBeF1ViDtKDmXyz4UJPgEV0lv91BmV0rvk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "914492512780-3v2hu1u5vpb146sks2if3upeel6h3qt1.apps.googleusercontent.com",
+              "client_id": "972139813772-h60o3s3dfjlrp2tdhl0i7718h7p3a08u.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
