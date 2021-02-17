@@ -5,6 +5,7 @@ import 'package:latlong/latlong.dart';
 import 'package:vaxbud/services/storage/shared_prefs.dart';
 
 import 'package:vaxbud/widgets/common/search_place_widget.dart';
+import 'packge:vaxbud/widgets/client_screen/rsults_page/result_tile.dart';
 
 
 class ResultsPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class ResultsPage extends StatefulWidget {
 class _ResultsPageState extends State<ResultsPage> {
 	
 	CollectionReference requestsRef = Firestore.instance.collection("appointmentRequests");
-
+	CollectionReference sitesRef = Firestore.instance.collection("vaxSites");
 	BehaviorSubject<double> radius = BehaviorSubject.seeded(100.0);
 	BehaviorSubject<LatLng> locationQuery = BehaviorSubject.seeded(LatLng(0.0, 0.0));
 	BehaviorSubject<DateTime> dateQuery = BehaviorSubject.seeded(DateTime.now());
@@ -52,18 +53,18 @@ class _ResultsPageState extends State<ResultsPage> {
 		return Scaffold(
 					body: CustomScrollView(
 										slivers: <Widget>[
-										SliverList(
+												SliverList(
 														delegate: SliverChildListDelegate([
-												SearchPlaceWidget(onSelect: queryChangedCallback),
-									Slider(
-																min: 100.0,
-																max: 500.0,
-																divisions: 4,
-																value: radius.value,
-																label: 'Radius ${radius.value}km',
-																activeColor: Colors.green,
-																inactiveColor: Colors.green.withOpacity(0.2),
-																onChanged: (value) {
+																SearchPlaceWidget(onSelect: queryChangedCallback),
+																Slider(
+																		min: 100.0,
+																		max: 500.0,
+																		divisions: 4,
+																		value: radius.value,
+																		label: 'Radius ${radius.value}km',
+																		activeColor: Colors.green,
+																		inactiveColor: Colors.green.withOpacity(0.2),
+																		onChanged: (value) {
 													
 																				print('NEEW VAL');
 																				setState(() {
@@ -71,8 +72,8 @@ class _ResultsPageState extends State<ResultsPage> {
 																				});
 																		
 																		},
-															),
-									RaisedButton(
+																	),
+																RaisedButton(
 																	onPressed: () => _selectDate(context),
 																	child: Text('select date',
 																					style: TextStyle(
@@ -83,15 +84,14 @@ class _ResultsPageState extends State<ResultsPage> {
 																	color: Colors.greenAccent,
 																
 																	),
-											]),
-											
-											
-										),
-										StreamBuilder(
-													stream: Firestore.instance.collection("geoPosts").snapshots(),
+																]),
+													),
+												StreamBuilder(
+													stream: sitesRef.snapshots(),
 													builder: (context, snapshot) => SliverList(
 																	delegate: (snapshot.hasData && snapshot.data.documents.length > 0) ? SliverChildBuilderDelegate(
-																									(context, index) => ListTile(title: Text("result")),
+																									(context, index) => ResultTile(snapshot.data.documents[index]['siteName'],
+																																snapshot.data.documents[index].documentID),
 																									childCount: snapshot.data.documents.length,
 																									) : SliverChildBuilderDelegate(
 																									(context, index) => ListTile(title: Text("No Results")),
@@ -102,10 +102,8 @@ class _ResultsPageState extends State<ResultsPage> {
 																							),
 										
 												
-									])
-										
-										
-					
-						);
+													])
+
+										);
 				}
 	}	

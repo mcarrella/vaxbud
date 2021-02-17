@@ -9,18 +9,27 @@ class SiteRegisterForm extends StatefulWidget {
 
 
 class _SiteRegisterFormState extends State<SiteRegisterForm> {
-	final _formKey = GlobalKey<FormState>();
+
+	
+	TextEditingController _nameController = TextEditingController();
+	TextEditingController _phoneController = TextEditingControler();
 	
 	String _siteName;
 	String _sitePhone;
 	LatLng _siteLocation;
 	
+	
+	locationSelectedCallback(LatLng coords) {
+		setState(() {
+					_siteLocation = coords;
+				});
+		}
+	
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
 					body: Center(
-							child: Form(
-									key: this._formKey,
+							
 									child: Padding(
 										padding: const EdgeInsets.all(32.0),
 										child: Column(
@@ -29,36 +38,30 @@ class _SiteRegisterFormState extends State<SiteRegisterForm> {
 												
 												SizedBox(height: 15),
 												Text("site name: "),
-												TextFormField(
-													autovalidate: false,
-													onSaved: (value) => this._siteName = value,
-													validator: (value) {
-														if (value.length <3) {
-															return 'a minimum of 3 characters is required';
-															}
-														},
-													),
+												TextField(
+														controller: _nameController,
+														),
 												SizedBox(height: 15),
-												TextFormField(
-													autovalidate: false,
-													onSaved: (value) => this._siteName = value,
-													validator: (value) {
-														if (value.length <10) {
-															return 'a minimum of 10 characters is required';
-															}
-														},
-													),
-													
+												Text("phone: "),
+												TextField(
+														controller: _phoneController,
+														)
+												SizedBox(height: 15),
+												Text("location: "),
+												SearchPlaceWidget(onSelect: locationSelectedCallback),
 												RaisedButton(
 															child: Text("submit"),
+												
 															onPressed: () {
-																				Navigator.pop(context, _siteName);
+																				Navigator.pop(context, {'siteName': _nameControoler.text,
+																										'sitePhone': _phoneController.text,
+																										'siteLocation': _siteLocation});
 																			},
 																		),
 												],
 											),
 										),
-									),
+								
 								),
 							);
 					}

@@ -19,20 +19,30 @@ class _AdminScreenState extends State<AdminScreen> {
 	CollectionReference sitesRef = Firestore.instance.collection("vaxSites");
 
 	int selectedIndex = 0;
+	String uid;
 	
 	
 
-	createSiteDoc(String siteName) {
+	createSiteDoc(Map<String, dynamic> siteData) {
 			print('CREATING');
 			_auth.signInAnonymously().then((result) {
 						print(result.user.uid);
 						sitesRef.document(result.user.uid).setData({
-																	'name': siteName
+																	'name': siteData['siteName'],
 																	});
 						sharedPrefs.uid = result.user.uid;
+						setState(() {
+										uid = sharedPrefs.uid;
+										});
 									});
-			setState(() {});
+			
 	}
+	
+	@override
+	initState() {
+			super.initState();
+			uid = sharedPrefs.uid;
+		}
 	
 	
 	@override
@@ -40,12 +50,13 @@ class _AdminScreenState extends State<AdminScreen> {
 	
 		
 		
+		
 		return 
 						Scaffold(
-									appBar: AppBar(title: (sharedPrefs.uid=="") ? Text("REGISTRATION") 
+									appBar: AppBar(title: (uid=="") ? Text("REGISTRATION") 
 																			: (selectedIndex==0) ? Text("CURRENT APPOINTMENTS")
 																			: Text("PENDING APPOINTMENTS")),
-									body: (sharedPrefs.uid=="") ? 
+									body: (uid=="") ? 
 												Center(
 														child: Column(
 																		children: <Widget>[
@@ -53,11 +64,12 @@ class _AdminScreenState extends State<AdminScreen> {
 																					RaisedButton(
 																							child: Text("begin"),
 																							onPressed: () async {
-																									final siteName = await Navigator.of(context)
+																									final siteData = await Navigator.of(context)
 																																.push(MaterialPageRoute(builder: (context) =>
 																																		SiteRegisterForm()));
 																																		
-																									createSiteDoc(siteName);
+																									createSiteDoc(siteData);
+																									
 																									
 																									}
 																								),
@@ -106,7 +118,7 @@ class _AdminScreenState extends State<AdminScreen> {
 																					
 																					}),
 																					
-									bottomNavigationBar:  (sharedPrefs.uid=="") ? SizedBox(height: 5) : BottomNavigationBar(
+									bottomNavigationBar:  (uid=="") ? SizedBox(height: 5) : BottomNavigationBar(
 																		currentIndex: selectedIndex,
 																		onTap: (int index) => setState(() => selectedIndex = index),
 																		items: [
