@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:latlong/latlong.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:vaxbud/services/storage/shared_prefs.dart';
 import 'package:vaxbud/widgets/admin_screen/site_register_form.dart';
 
@@ -15,6 +17,7 @@ class AdminScreen extends StatefulWidget {
 class _AdminScreenState extends State<AdminScreen> {
 
 	FirebaseAuth _auth = FirebaseAuth.instance;
+	final geo = Geoflutterfire();
 	CollectionReference requestsRef = Firestore.instance.collection("appointmentRequests");
 	CollectionReference sitesRef = Firestore.instance.collection("vaxSites");
 
@@ -27,8 +30,13 @@ class _AdminScreenState extends State<AdminScreen> {
 			print('CREATING');
 			_auth.signInAnonymously().then((result) {
 						print(result.user.uid);
+						LatLng coords = siteData['coords'];
+						GeoFirePoint point = geo.point(latitude: coords.latitude,
+														longitude: coords.longitude);
 						sitesRef.document(result.user.uid).setData({
 																	'name': siteData['siteName'],
+																	'phone': siteData['sitePhone'],
+																	'position': point.data,
 																	});
 						sharedPrefs.uid = result.user.uid;
 						setState(() {
@@ -103,7 +111,7 @@ class _AdminScreenState extends State<AdminScreen> {
 																																										children: <Widget>[
 																																												Text('inside column'),
 																																												FlatButton(child: Text('confirm'), onPressed: () {}),
-																																												FlatButton(child: Text('denyc'), onPressed: () {}),
+																																												FlatButton(child: Text('deny'), onPressed: () {}),
 																																										],
 																																								),
 																										

@@ -11,32 +11,32 @@ class SiteRegisterForm extends StatefulWidget {
 class _SiteRegisterFormState extends State<SiteRegisterForm> {
 
 	
+	
 	TextEditingController _nameController = TextEditingController();
-	TextEditingController _phoneController = TextEditingControler();
+	TextEditingController _phoneController = TextEditingController();
 	
 	String _siteName;
 	String _sitePhone;
-	LatLng _siteLocation;
+	LatLng _coords;
+
 	
 	
 	locationSelectedCallback(LatLng coords) {
 		setState(() {
-					_siteLocation = coords;
+					_coords = coords;
+					
+
 				});
 		}
 	
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
-					body: Center(
-							
-									child: Padding(
-										padding: const EdgeInsets.all(32.0),
-										child: Column(
-											mainAxisSize: MainAxisSize.min,
-											children: <Widget>[
-												
-												SizedBox(height: 15),
+					body: CustomScrollView(
+										slivers: <Widget>[
+												SliverList(
+														delegate: SliverChildListDelegate([
+																SizedBox(height: 30),
 												Text("site name: "),
 												TextField(
 														controller: _nameController,
@@ -45,24 +45,25 @@ class _SiteRegisterFormState extends State<SiteRegisterForm> {
 												Text("phone: "),
 												TextField(
 														controller: _phoneController,
-														)
+														),
 												SizedBox(height: 15),
 												Text("location: "),
 												SearchPlaceWidget(onSelect: locationSelectedCallback),
 												RaisedButton(
 															child: Text("submit"),
-												
+														
 															onPressed: () {
-																				Navigator.pop(context, {'siteName': _nameControoler.text,
+																				Navigator.pop(context, {'siteName': _nameController.text,
 																										'sitePhone': _phoneController.text,
-																										'siteLocation': _siteLocation});
+																										'coords': _coords});
 																			},
 																		),
-												],
-											),
-										),
-								
-								),
+																]),
+													),
+												
+										
+												
+													]),
 							);
 					}
 	}
