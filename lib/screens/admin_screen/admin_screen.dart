@@ -18,8 +18,14 @@ class _AdminScreenState extends State<AdminScreen> {
 
 	FirebaseAuth _auth = FirebaseAuth.instance;
 	final geo = Geoflutterfire();
-	CollectionReference requestsRef = Firestore.instance.collection("appointmentRequests");
+	
 	CollectionReference sitesRef = Firestore.instance.collection("vaxSites");
+	
+	_handleConfirm(String clientId) {
+			sitesRef.document(sharedPrefs.uid)
+					.collection("confirmed")
+					.document(clientId).setData({});
+			}
 
 	int selectedIndex = 0;
 	String uid;
@@ -98,6 +104,7 @@ class _AdminScreenState extends State<AdminScreen> {
 																												return ListView.builder(
 																															itemCount: snapshot.data.documents.length,
 																															itemBuilder: (context, index) {
+																																ClientModel _client = ClientModel.fromMap(item.data(), item.documentID);
 																																return Card(
 																																				child: ListTile(
 																																							leading: Icon(Icons.list),
@@ -110,7 +117,8 @@ class _AdminScreenState extends State<AdminScreen> {
 																																							subtitle: Column(
 																																										children: <Widget>[
 																																												Text('inside column'),
-																																												FlatButton(child: Text('confirm'), onPressed: () {}),
+																																												FlatButton(child: Text('confirm'), onPressed: () {
+																																															_handleConfirm(_client.id),
 																																												FlatButton(child: Text('deny'), onPressed: () {}),
 																																										],
 																																								),
